@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.aziz.noteappkotlin.HomeFragment"
+        android:name="com.aziz.noteappkotlin.fragments.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -16,7 +16,13 @@
     </fragment>
     <fragment
         android:id="@+id/noteDetailFragment"
-        android:name="com.aziz.noteappkotlin.NoteDetailFragment"
+        android:name="com.aziz.noteappkotlin.fragments.NoteDetailFragment"
         android:label="fragment_note_detail"
-        tools:layout="@layout/fragment_note_detail" />
+        tools:layout="@layout/fragment_note_detail" >
+        <action
+            android:id="@+id/action_noteDetailFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

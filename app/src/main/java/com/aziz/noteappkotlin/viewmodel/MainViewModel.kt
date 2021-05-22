@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aziz.noteappkotlin.model.Note
+import com.aziz.noteappkotlin.database.Note
 import com.aziz.noteappkotlin.repository.Repository
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch

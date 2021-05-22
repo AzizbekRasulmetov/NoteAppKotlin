@@ -16,9 +16,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
     }
 
-//    override fun onNoteClicked(position: Int) {
-//        Toast.makeText(this, "Clicked", Toast.LENGTH_SHORT).show()
-//    }
+
 }

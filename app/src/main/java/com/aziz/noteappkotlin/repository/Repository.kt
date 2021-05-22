@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import com.aziz.noteappkotlin.database.NoteDAO
 import com.aziz.noteappkotlin.database.NoteDatabase
-import com.aziz.noteappkotlin.model.Note
+import com.aziz.noteappkotlin.database.Note
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.withContext
 

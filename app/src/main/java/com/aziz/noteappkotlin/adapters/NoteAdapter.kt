@@ -1,12 +1,11 @@
 package com.aziz.noteappkotlin.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.aziz.noteappkotlin.R
-import com.aziz.noteappkotlin.model.Note
+import com.aziz.noteappkotlin.database.Note
 import kotlinx.android.synthetic.main.note_item.view.*
 
 class NoteAdapter(
@@ -23,10 +22,11 @@ class NoteAdapter(
         fun onBind(note: Note) {
             itemView.note_name_txt.text = note.name
             itemView.importance_color.setBackgroundColor(note.color)
+            itemView.date_txt.text = note.date
         }
 
         override fun onClick(v: View?) {
-            val position = adapterPosition
+            val position = absoluteAdapterPosition
             if (position != RecyclerView.NO_POSITION) {
                 listener.onNoteClicked(position)
             }
