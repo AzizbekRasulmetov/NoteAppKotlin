@@ -7,6 +7,8 @@
     <string name="delete_message_confirm">Are you sure you want to delete?</string>
     <string name="delete_all_nots_confirm">Are you sure you want to delete all notes?</string>
     <string name="done_confirm_message">Have you done?</string>
+    <string name="please_choose_importance">Please choose priority</string>
+    <string name="please_add_smth">Please add something</string>
 
 
     <!--Add Note Layout-->

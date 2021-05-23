@@ -59,7 +59,7 @@ class NoteDetailFragment : Fragment() {
             }
             .show()
     }
-    //TODO: Delete, Edit notes
+    //TODO: Edit notes
 
 
 }

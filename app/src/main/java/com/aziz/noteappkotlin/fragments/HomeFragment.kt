@@ -2,21 +2,20 @@ package com.aziz.noteappkotlin.fragments
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.*
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.aziz.noteappkotlin.R
 import com.aziz.noteappkotlin.adapters.NoteAdapter
-import com.aziz.noteappkotlin.databinding.FragmentHomeBinding
 import com.aziz.noteappkotlin.database.Note
+import com.aziz.noteappkotlin.databinding.FragmentHomeBinding
 import com.aziz.noteappkotlin.viewmodel.MainViewModel
 import com.aziz.noteappkotlin.viewmodel.MainViewModelFactor
 import kotlinx.android.synthetic.main.add_note_layout.view.*
@@ -57,13 +56,14 @@ class HomeFragment : Fragment(), NoteAdapter.NoteClickListener {
         binding.addFab.setOnClickListener {
             dialogBuilder.show()
         }
-        getNotesFromDatabase()
 
+        getNotesFromDatabase()
+        showNoItemImage()
         return binding.root
     }
 
-    fun setToolbar(){
-        if(activity is AppCompatActivity){
+    fun setToolbar() {
+        if (activity is AppCompatActivity) {
             (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
         }
     }
@@ -71,7 +71,8 @@ class HomeFragment : Fragment(), NoteAdapter.NoteClickListener {
     fun buildRecyclerView() {
         noteList = ArrayList()
         sortedList = ArrayList()
-        adapter = NoteAdapter(sortedList, this)
+        adapter = NoteAdapter(this)
+        adapter.setNoteList(sortedList)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.setHasFixedSize(true)
     }
@@ -96,19 +97,19 @@ class HomeFragment : Fragment(), NoteAdapter.NoteClickListener {
     }
 
     fun createNote() {
+        binding.noItemImage.visibility = View.GONE
         val nameStr = dialogView.note_name_edit.text.toString()
         when (nameStr) {
-            "" -> Toast.makeText(context, "Please add something", Toast.LENGTH_SHORT).show()
+            "" -> Toast.makeText(context, getString(R.string.please_add_smth), Toast.LENGTH_SHORT)
+                .show()
             else -> {
                 setPriorityColor()
-                Log.i("List", noteList.toString())
                 val date = SimpleDateFormat("dd MMMM", Locale.getDefault()).format(Date())
                 val note = Note(nameStr, color.toInt(), date, priority)
                 noteList.add(note)
                 viewModel.addNote(note)
                 sortByPriority()
-                Log.i("List", noteList.toString())
-                adapter.notifyDataSetChanged()
+                adapter.setNoteList(sortedList)
             }
         }
     }
@@ -160,7 +161,7 @@ class HomeFragment : Fragment(), NoteAdapter.NoteClickListener {
                 priority = 4
             }
             dialogView.checkbox_important.isChecked -> {
-                color =ContextCompat.getColor(requireContext(), R.color.orange).toString()
+                color = ContextCompat.getColor(requireContext(), R.color.orange).toString()
                 priority = 2
             }
             dialogView.checkbox_very_important.isChecked -> {
@@ -176,14 +177,30 @@ class HomeFragment : Fragment(), NoteAdapter.NoteClickListener {
             noteList.clear()
             noteList.addAll(it)
             sortByPriority()
-            adapter.notifyDataSetChanged()
+            adapter.setNoteList(sortedList)
+            showNoItemImage()
         })
     }
 
     fun deleteAllNotes() {
         viewModel.deleteAllNotes()
         sortedList.clear()
-        adapter.notifyDataSetChanged()
+        noteList.clear()
+        adapter.setNoteList(sortedList)
+        showNoItemImage()
+    }
+
+    fun deleteNote(note: Note) {
+        viewModel.deleteNote(note)
+        noteList.remove(note)
+        sortedList.remove(note)
+        adapter.setNoteList(sortedList)
+        showNoItemImage()
+    }
+
+    fun showNoItemImage(){
+        if(sortedList.isEmpty() || noteList.isEmpty()) binding.noItemImage.visibility = View.VISIBLE
+        else binding.noItemImage.visibility = View.GONE
     }
 
     fun confirmDialog(message: String) {
@@ -205,6 +222,20 @@ class HomeFragment : Fragment(), NoteAdapter.NoteClickListener {
         val note = sortedList[position]
         val bundle: Bundle = bundleOf("note" to note)
         findNavController().navigate(R.id.action_homeFragment_to_noteDetailFragment, bundle)
+    }
+
+    override fun onPopupClicked(view: View, position: Int) {
+        val popupMenu = PopupMenu(context, view)
+        popupMenu.inflate(R.menu.note_menu)
+        popupMenu.setOnMenuItemClickListener {
+            val note = sortedList[position]
+            when (it.itemId) {
+                R.id.delete_action -> deleteNote(note)
+                R.id.done_action -> deleteNote(note)
+            }
+            true
+        }
+        popupMenu.show()
     }
 
     //Menu----------------------------------------------------

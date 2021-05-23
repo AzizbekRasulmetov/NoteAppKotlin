@@ -5,6 +5,7 @@
     <item
         android:id="@+id/delete_all_notes_action"
         android:icon="@drawable/ic_baseline_delete_24"
+        app:iconTint="@color/colorAccent"
         android:title="@string/delete"
         app:showAsAction="ifRoom"/>
 
